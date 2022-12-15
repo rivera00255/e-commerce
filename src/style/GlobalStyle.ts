@@ -4,7 +4,7 @@ const GlobalStyle = createGlobalStyle`
     *,::before,::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:theme('borderColor.DEFAULT','currentColor')}
     ::before,::after{--tw-content:''}
     html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:theme('fontFamily.sans',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji")}
-    body{margin:0;line-height:inherit}
+    body{margin:0;line-height:inherit;font-family: 'Karla', sans-serif;}
     hr{height:0;color:inherit;border-top-width:1px}
     abbr:where([title]){text-decoration:underline dotted}
     h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}
