@@ -1,24 +1,41 @@
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
+import cartState, { Product } from '../../recoils/cart';
 
 const Cart = () => {
+  const cart = useRecoilValue(cartState);
+  const setCart = useSetRecoilState(cartState);
+
+  const handleDelete = (id: number) => {
+    const products = cart.filter((item) => item.id !== id);
+    setCart([...products]);
+  };
+
+  // const data = cart?.reduce((prev, cur) => new Map([...prev, [cur.id, { ...cur }]]), new Map());
+  // console.log(data);
+
   return (
     <section>
       <Container>
         <h2>장바구니</h2>
         <div>
-          <Item>
-            <div></div>
-            <div>
+          {cart?.map((item: Product) => (
+            <Item key={item.id}>
               <div>
-                <p>name</p>
-                <input type="number" />
-                <p>price</p>
+                <img src={item.images[0]} alt={item.title} />
               </div>
               <div>
-                <button>del</button>
+                <div>
+                  <p>{item.title}</p>
+                  <input type="number" defaultValue={item.amount} />
+                  <p>$ {item.price}</p>
+                </div>
+                <div>
+                  <button onClick={() => handleDelete(item.id)}>del</button>
+                </div>
               </div>
-            </div>
-          </Item>
+            </Item>
+          ))}
         </div>
         <div>
           <div>
@@ -75,11 +92,14 @@ const Container = styled.div`
 
 const Item = styled.div`
   display: flex;
+  margin-bottom: 10px;
   > div:first-of-type {
     width: 120px;
-    height: 120px;
-    background: #eee;
+    max-height: 120px;
     margin-right: 10px;
+    > img {
+      width: 100%;
+    }
   }
   > div:last-of-type {
     width: calc(100% - 130px);
@@ -88,5 +108,6 @@ const Item = styled.div`
   }
   input {
     border: 1px solid #ddd;
+    padding: 0 4px;
   }
 `;

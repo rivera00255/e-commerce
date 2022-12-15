@@ -4,22 +4,7 @@ import ProductListItem from '../components/product/ProductListItem';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-
-export type Product = {
-  id: number;
-  price: number;
-  title: string;
-  description: string;
-  categoryId: number;
-  images: string[];
-  category: Category;
-};
-
-export type Category = {
-  id: number;
-  name: string;
-  images: string;
-};
+import { Product } from '../recoils/cart';
 
 export const baseUrl = `${import.meta.env.VITE_API_URL}`;
 
@@ -46,12 +31,12 @@ const Main = () => {
 export default Main;
 
 const Section = styled.section`
-  width: 990px;
-  margin: 0 auto;
+  width: 100%;
 `;
 
 const Container = styled.div`
-  width: 100%;
+  width: 990px;
+  margin: 0 auto;
   padding: 40px 16px;
   display: flex;
   flex-wrap: wrap;

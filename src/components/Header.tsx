@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { baseUrl, Category } from '../pages';
+import { baseUrl } from '../pages';
+import { Category } from '../recoils/cart';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const Header = () => {
   const { data: categoryData } = useQuery(['category'], () => {
     return axios.get(`${baseUrl}/categories`);
   });
-  const categories: Category[] = useMemo(() => categoryData?.data, [categoryData]);
+  const categories: Category[] = useMemo(() => categoryData?.data.slice(0, 5), [categoryData]);
 
   return (
     <MainHeader>
@@ -22,7 +23,12 @@ const Header = () => {
       <nav>
         <ul>
           {categories?.map((item: Category) => (
-            <li key={item.id}>{item.name}</li>
+            <NavLink
+              to={`/products/${item.id}`}
+              key={item.id}
+              className={({ isActive }) => (isActive ? 'active' : undefined)}>
+              <li key={item.id}>{item.name}</li>
+            </NavLink>
           ))}
         </ul>
       </nav>
@@ -62,16 +68,20 @@ const MainHeader = styled.header`
     > ul {
       width: 100%;
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      > li {
+      li {
         padding: 4px 16px;
-        cursor: pointer;
+      }
+      a {
         border-bottom: 4px solid #f5f5f5;
         &:hover {
-          border-bottom: 4px solid #dbdbdb;
+          border-bottom: 4px solid #757575;
         }
+      }
+      .active {
+        font-weight: 600;
+        border-bottom: 4px solid #757575;
       }
     }
   }

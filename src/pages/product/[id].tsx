@@ -1,19 +1,44 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useMemo } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { baseUrl, Product } from '..';
+import { baseUrl } from '..';
 import PlaceholderImg from '../../assets/images/placeholder.png';
+import { useRecoilState } from 'recoil';
+import cartState, { Product } from '../../recoils/cart';
 
 const ProductDetail = () => {
   const { id } = useParams();
+
+  const [amount, setAmount] = useState(1);
+  const [cart, setCart] = useRecoilState(cartState);
 
   const { data: productData } = useQuery(['product', id], () => {
     return axios.get(`${baseUrl}/products/${id}`);
   });
   const product: Product = useMemo(() => productData?.data, [productData]);
   //   console.log(product);
+
+  const handleAddCart = () => {
+    const cartItem = cart.find((item) => item.id === product.id);
+    if (cartItem) {
+      if (confirm('장바구니에 있는 상품입니다. 추가할까요?')) {
+        const cartItem = cart.reduce((acc, cur) => new Map([...acc, [cur.id, { ...cur }]]), new Map());
+        cartItem.set(product.id, { ...product, amount: cartItem.get(product.id).amount + amount });
+        setCart(Array.from(cartItem.values()));
+      }
+    } else {
+      setCart((prev) => [
+        ...prev,
+        {
+          ...product,
+          amount: amount,
+        },
+      ]);
+    }
+  };
 
   if (!productData) return null;
   return (
@@ -31,8 +56,14 @@ const ProductDetail = () => {
           </div>
           <div>
             <label>
-              <input type="number" defaultValue={1} />
-              <button>장바구니</button>
+              <input
+                type="number"
+                defaultValue={amount}
+                onChange={(e) => {
+                  setAmount(Number(e.target.value));
+                }}
+              />
+              <button onClick={handleAddCart}>장바구니</button>
               {/* <button>찜하기</button> */}
             </label>
             <p>$ {product.price}</p>
