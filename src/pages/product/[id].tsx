@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useMemo } from 'react';
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { baseUrl } from '..';
 import PlaceholderImg from '../../assets/images/placeholder.png';
@@ -11,6 +11,7 @@ import cartState, { Product } from '../../recoils/cart';
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [amount, setAmount] = useState(1);
   const [cart, setCart] = useRecoilState(cartState);
@@ -20,6 +21,12 @@ const ProductDetail = () => {
   });
   const product: Product = useMemo(() => productData?.data, [productData]);
   //   console.log(product);
+
+  const amountValidation = (amount: number) => {
+    if (amount < 1) return 1;
+    if (amount > 999) return 999;
+    return amount;
+  };
 
   const handleAddCart = () => {
     const cartItem = cart.find((item) => item.id === product.id);
@@ -37,6 +44,9 @@ const ProductDetail = () => {
           amount: amount,
         },
       ]);
+      if (confirm('장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?')) {
+        navigate('/cart');
+      }
     }
   };
 
@@ -58,15 +68,15 @@ const ProductDetail = () => {
             <label>
               <input
                 type="number"
-                defaultValue={amount}
+                value={amount}
                 onChange={(e) => {
-                  setAmount(Number(e.target.value));
+                  setAmount(amountValidation(Number(e.target.value)));
                 }}
               />
               <button onClick={handleAddCart}>장바구니</button>
               {/* <button>찜하기</button> */}
             </label>
-            <p>$ {product.price}</p>
+            <p>$ {product.price * amount}</p>
             <p>{product.description}</p>
           </div>
         </Wrapper>
@@ -103,7 +113,7 @@ const Wrapper = styled.div`
   input[type='number'] {
     border: 1px solid #444;
     margin-right: 8px;
-    padding: 0 4px;
+    padding-left: 4px;
   }
   button {
     padding: 4px 12px;

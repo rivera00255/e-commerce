@@ -13,7 +13,7 @@ const Main = () => {
     return axios.get(`${baseUrl}/products`);
   });
   const products: Product[] = useMemo(() => productData?.data, [productData]);
-  // console.log(products);
+  // console.log(productData);
 
   return (
     <Section>

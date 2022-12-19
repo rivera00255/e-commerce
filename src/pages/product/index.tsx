@@ -3,8 +3,9 @@ import axios from 'axios';
 import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { baseUrl, Product } from '..';
+import { baseUrl } from '..';
 import ProductListItem from '../../components/product/ProductListItem';
+import { Product } from '../../recoils/cart';
 
 const ProductListByCategory = () => {
   const { categoryId } = useParams();

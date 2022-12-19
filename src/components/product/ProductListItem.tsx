@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Product } from '../../pages';
 import PlaceholderImg from '../../assets/images/placeholder.png';
+import { Product } from '../../recoils/cart';
 
 const ProductListItem = ({ item }: { item: Product }) => {
   return (
